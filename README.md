@@ -1,4 +1,4 @@
-# 45 Claude Code Tips: From Basics to Advanced
+# 46 Claude Code Tips: From Basics to Advanced
 
 Here are my tips for getting the most out of Claude Code, including a custom status line script, cutting the system prompt in half, using Gemini CLI as Claude Code's minion, and Claude Code running itself in a container. Also includes the [dx plugin](#tip-44-install-the-dx-plugin).
 
@@ -55,6 +55,7 @@ Here are my tips for getting the most out of Claude Code, including a custom sta
 - [Tip 43: Keep learning!](#tip-43-keep-learning)
 - [Tip 44: Install the dx plugin](#tip-44-install-the-dx-plugin)
 - [Tip 45: Quick setup script](#tip-45-quick-setup-script)
+- [Tip 46: Build a team](#tip-46-build-a-team)
 
 <!-- /TOC -->
 
@@ -1036,3 +1037,87 @@ Skip any? [e.g., 1 4 7 or Enter for all]:
 📝 **Story**: [How I got a full-time job with Claude Code](content/how-i-got-a-job-with-claude-code.md)
 
 📰 **Newsletter**: [Agentic Coding with Discipline and Skill](https://agenticcoding.substack.com/) - bring the practice of agentic coding to the next level
+
+## Tip 46: Build a team
+
+Claude Code has a built-in team feature that lets you spawn multiple specialized agents (teammates) that work together on a complex task. Each teammate has their own conversation context and can message you or other teammates.
+
+### When to use a team
+
+Use a team when you have a complex, multi-step task that benefits from parallel work:
+- **Full-stack features** - frontend work + backend work simultaneously
+- **Large refactors** - keep tests passing while making changes across many files
+- **Multi-phase projects** - research → planning → implementation
+- **Exploration + implementation** - one agent explores, another implements
+
+### How it works
+
+1. **Create a team** with a name and description
+2. **Spawn teammates** - each joins the team and shares a task list
+3. **Assign tasks** using TaskUpdate to give work to specific teammates
+4. **Teammates work** - they go idle after each turn (this is normal)
+5. **Coordinate** - message teammates directly to check on progress or unblock them
+6. **Shutdown** - gracefully terminate teammates when done
+
+### Creating a team
+
+Just ask Claude Code:
+
+> Create a team called "my-project" for building a full-stack feature
+
+Or be more specific:
+
+> Spawn two teammates - one for frontend React work, one for backend API work. Name the team "web-app-team"
+
+### Choosing agent types
+
+When spawning teammates, match the agent type to the work:
+
+- **Explore** - for codebase exploration, finding files, understanding architecture (read-only)
+- **Plan** - for designing implementation strategies before coding (read-only)
+- **General-purpose** - for actual coding tasks (full capabilities including edit/write)
+
+Example:
+> Spawn a general-purpose agent named "frontend-dev" and another named "backend-dev"
+
+### Task management
+
+Teams share a task list that all teammates can access. After spawning teammates:
+
+1. **Create tasks** using TaskCreate or ask Claude to break down the work
+2. **Assign tasks** to teammates by name using TaskUpdate
+3. **Track progress** - use TaskList to see what's available
+
+Example workflow:
+> Create tasks for the full-stack feature. Assign the frontend tasks to "frontend-dev" and backend tasks to "backend-dev"
+
+### Communicating with teammates
+
+You can message teammates at any time:
+
+> Tell "frontend-dev" to use the new API endpoint format
+
+Teammates can also message you when they:
+- Complete a task
+- Need clarification
+- Are blocked by something
+- Have questions
+
+This messaging happens automatically - you'll see their messages as new conversation turns.
+
+### Important notes
+
+- **Idle is normal** - teammates go idle after every turn. This doesn't mean they're done, just waiting for input
+- **Refer by name** - always use teammates' names (not IDs) when messaging or assigning tasks
+- **Patience** - give teammates time to complete their work before checking in
+- **Shutdown gracefully** - use SendMessage with type "shutdown_request" when done
+
+### Cleanup
+
+When the work is complete:
+
+> Shutdown all teammates on the "web-app-team"
+
+This removes the team and task directories. You can also delete the team directly with TeamDelete after all teammates have shut down.
+
+Teams are a powerful way to parallelize complex work - just like having multiple engineers working together on different parts of a project.
